@@ -4,7 +4,7 @@
 # Don't touch pls
 ConfigVersion: ${project.version}
 
-# Bot token; don't know what this is? Look at the video on the plugin page for instructions
+# Bot token; Don't know what this is? Read the wiki or look at the video on the plugin page for instructions
 BotToken: "BOTTOKEN"
 
 # Channel links from game to Discord
@@ -32,29 +32,59 @@ DiscordConsoleChannelId: "000000000000000000"
 # Invitation link shown to players when using /discord and on the message shown to unlinked players when linking is enforced
 DiscordInviteLink: "https://discord.gg/muudasedafailisconfig.yml"
 
-# Debug options, don't touch unless needed
+# Debug information
+# Don't enable these unless you're attempting to locate an issue
 #
-# DebugLevel: 0 = no debug, 1 = debug, 2 = debug with stack traces
+# Available Debug categories:
+# MINECRAFT_TO_DISCORD  - Messages coming from Minecraft
+# DISCORD_TO_MINECRAFT  - Messages coming from Discord
+# GROUP_SYNC            - Group synchronization
+# PRESENCE              - The bot's game status or presence
+# VOICE                 - The voice module (see voice.yml)
+# REQUIRE_LINK          - The require link to join module (see linking.yml)
+# NICKNAME_SYNC         - Nickname synchronization
+# ALERTS                - Alerts (see alerts.yml)
+# WATCHDOG              - The watchdog
+# BAN_SYNCHRONIZATION   - Ban synchronization
+# UNCATEGORIZED         - Anything not in any of the above categories
+# ALL                   - All the above categories (including UNCATEGORIZED)
 #
-DebugLevel: 0
-DebugJDA: false
-DebugJDARestActions: false
-CancelConsoleCommandIfLoggingFailed: true
-ForcedLanguage: none
-# https://cravatar.eu/helmavatar/{username}/{size}.png#{texture}
-AvatarUrl: https://crafatar.com/avatars/{uuid-nodashes}.png?size={size}&overlay#{texture}
+# JDA                   - JDA's debug messages
+# JDA_REST_ACTIONS      - For debugging JDA's rest actions
+# CALLSTACKS            - Displays the stacktrace for debug calls for DiscordSRV's debug calls
+#
+# Ex. "Debug: [GROUP_SYNC, PRESENCE]"
+#
+Debug: []
+
+# Experiments
+# These features are not fully optimized; use at your own risk
+
+# JDBC (MySQL/MariaDB)
 Experiment_JdbcAccountLinkBackend: "jdbc:mysql://HOST:PORT/DATABASE?autoReconnect=true&useSSL=false"
 Experiment_JdbcTablePrefix: "discordsrv"
 Experiment_JdbcUsername: "username"
 Experiment_JdbcPassword: "password"
+
+# Webhook Delivery
 Experiment_WebhookChatMessageDelivery: false
 Experiment_WebhookChatMessageUsernameFormat: "%displayname%"
 Experiment_WebhookChatMessageFormat: "%message%"
 Experiment_WebhookChatMessageUsernameFromDiscord: false
 Experiment_WebhookChatMessageAvatarFromDiscord: false
+
+# https://cravatar.eu/helmavatar/{username}/{size}.png#{texture}
+AvatarUrl: https://crafatar.com/avatars/{uuid-nodashes}.png?size={size}&overlay#{texture}
+
+# Reserializer
+# Converts formatting (bold, italics, underline) between Minecraft and Discord
 Experiment_MCDiscordReserializer_ToDiscord: false
 Experiment_MCDiscordReserializer_ToMinecraft: false
 Experiment_MCDiscordReserializer_InBroadcast: false
+
+# Other
+CancelConsoleCommandIfLoggingFailed: true
+ForcedLanguage: none
 PrintGuildsAndChannels: true
 ForceTLSv12: true
 NoopHostnameVerifier: false
@@ -212,28 +242,6 @@ ChannelTopicUpdaterRateInMinutes: 10
 # PlaceholderAPI placeholders are supported for the values
 #
 DiscordCannedResponses: {"!ip": "sinuserveriip.ee", "!site": "https://sinusaidiaadress.ee"}
-
-# Minecraft to Discord account linking
-# These are the config options pertaining to how linking a Minecraft account to a Discord account functions
-#
-# MinecraftDiscordAccountLinkedConsoleCommands: commands to run when an account is linked, see below for possible placeholders
-# MinecraftDiscordAccountUnlinkedConsoleCommands: commands to run when an account is unlinked, see below for possible placeholders
-# %minecraftplayername%: player's Minecraft username
-#                         example: Notch
-# %minecraftuuid%:       player's uuid
-#                         example: you know what a uuid looks like
-# %discordid%:           linked discord account's id
-#                         example: 12345678901234567890
-# %discordname%:         linked discord account's username
-#                         example: Notch
-#
-# MinecraftDiscordAccountLinkedRoleNameToAddUserTo: the name of a discord role to add a discord user to when they link their account
-# MinecraftDiscordAccountLinkedAllowRelinkBySendingANewCode: allows sending a new code to the bot to unlink and relink with the new code
-#
-MinecraftDiscordAccountLinkedConsoleCommands: ["", "", ""]
-MinecraftDiscordAccountUnlinkedConsoleCommands: ["", "", ""]
-MinecraftDiscordAccountLinkedRoleNameToAddUserTo: "Ühendatud"
-MinecraftDiscordAccountLinkedAllowRelinkBySendingANewCode: false
 
 # Server watchdog
 #

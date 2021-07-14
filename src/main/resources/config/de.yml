@@ -4,7 +4,7 @@
 # Bitte nicht verändern!
 ConfigVersion: ${project.version}
 
-# Bot Token, du weißt nicht, was das ist? Schau dir das Video auf der Pluginseite an!
+# Bot Token; du weißt nicht, was das ist? Lesen Sie das Wiki oder schau dir das Video auf der Pluginseite an!
 BotToken: "BOTTOKEN"
 
 # Kanalverbindungen vom Spiel zu Discord
@@ -32,29 +32,60 @@ DiscordConsoleChannelId: "000000000000000000"
 # Der Einladungslink wird den Spielern bei Verwendung von /discord und in der Nachricht angezeigt, die den nicht verbundenen Spielern angezeigt wird, wenn die Verknüpfung erzwungen wird
 DiscordInviteLink: "https://discord.gg/changethisintheconfig.yml"
 
-# Debug Optionen, nicht anfassen bis wirklich benötigt
+# Debug-Informationen
+# Aktivieren Sie diese nur, wenn Sie versuchen, ein Problem zu finden
 #
-# DebugLevel: 0 = deaktiviert, 1 = Debugmeldungen, 2 = Debugmeldungen mit Stacktraces
+# Verfügbare Debug-Kategorien:
+# MINECRAFT_TO_DISCORD  - Nachrichten von Minecraft
+# DISCORD_TO_MINECRAFT  - Nachrichten von Discord
+# GROUP_SYNC            - Gruppensynchronisation
+# PRESENCE              - Der Spielstatus oder die Präsenz des Bots
+# VOICE                 - Das Sprachmodul (siehe voice.yml)
+# REQUIRE_LINK          - Der Link zum Beitritt zum Modul erforderlich (siehe linking.yml)
+# NICKNAME_SYNC         - Spitznamensynchronisation
+# ALERTS                - Waarschuwingen (siehe alerts.yml)
+# WATCHDOG              - Server-Watchdog
+# BAN_SYNCHRONIZATION   - Synchronisierung von Bans
+# UNCATEGORIZED         - Alles, was keiner der oben genannten Kategorien angehört
+# ALL                   - Alle oben genannten Kategorien (einschließlich UNCATEGORIZED)
 #
-DebugLevel: 0
-DebugJDA: false
-DebugJDARestActions: false
-CancelConsoleCommandIfLoggingFailed: true
-ForcedLanguage: none
-# https://cravatar.eu/helmavatar/{username}/{size}.png#{texture}
-AvatarUrl: https://crafatar.com/avatars/{uuid-nodashes}?overlay&size={size}
+# JDA                   - Debug-Meldungen von JDA
+# JDA_REST_ACTIONS      - Zum Debuggen der Restaktionen von JDA
+# CALLSTACKS            - Zeigt den Stack-Trace für DiscordSRV-Debug-Aufrufe an
+#
+# Beispiel: "Debug: [GROUP_SYNC, PRESENCE]"
+#
+Debug: []
+RespectChatPlugins: true
+
+# Experimente
+# Diese Funktionen sind nicht vollständig optimiert. Benutzung auf eigene Gefahr
+
+# JDBC (MySQL/MariaDB)
 Experiment_JdbcAccountLinkBackend: "jdbc:mysql://HOST:PORT/DATABASE?autoReconnect=true&useSSL=false"
 Experiment_JdbcTablePrefix: "discordsrv"
 Experiment_JdbcUsername: "username"
 Experiment_JdbcPassword: "password"
+
+# Webhook Lieferung
 Experiment_WebhookChatMessageDelivery: false
 Experiment_WebhookChatMessageUsernameFormat: "%displayname%"
 Experiment_WebhookChatMessageFormat: "%message%"
 Experiment_WebhookChatMessageUsernameFromDiscord: false
 Experiment_WebhookChatMessageAvatarFromDiscord: false
+
+# https://cravatar.eu/helmavatar/{username}/{size}.png#{texture}
+AvatarUrl: https://crafatar.com/avatars/{uuid-nodashes}?overlay&size={size}
+
+# Reserializer
+# Konvertiert die Formatierung (fett, kursiv, unterstreicht) zwischen Minecraft und Discord
 Experiment_MCDiscordReserializer_ToDiscord: false
 Experiment_MCDiscordReserializer_ToMinecraft: false
 Experiment_MCDiscordReserializer_InBroadcast: false
+
+# Andere
+CancelConsoleCommandIfLoggingFailed: true
+ForcedLanguage: none
 PrintGuildsAndChannels: true
 ForceTLSv12: true
 NoopHostnameVerifier: false
@@ -212,29 +243,6 @@ ChannelTopicUpdaterRateInMinutes: 10
 # PlaceholderAPI-Platzhalter werden unterstützt
 #
 DiscordCannedResponses: {"!ip": "deineserveradresse.net", "!site": "http://deineseite.net"}
-
-# Minecraft -> Discord: Accountverknüpfung
-# Dies sind die Optionen, die bestimmen, wie die Verknüpfung von Accounts zwischen Discord und Minecraft funktioniert.
-#
-# MinecraftDiscordAccountLinkedConsoleCommand: Befehl(e), die ausgeführt werden, wenn 2 Accounts verknüpft wurden
-# MinecraftDiscordAccountUnlinkedConsoleCommands: Befehle zum Ausführen, wenn ein Account-Link rückgängig gemacht wird, siehe unten für mögliche Platzhalter
-# Verfügbare Platzhalter:
-# %minecraftplayername%: Minecraft-Name des Spielers
-#                         z.B. Notch
-# %minecraftuuid%:       UUID des Spielers
-#                         z.B. 069a79f4-44e9-4726-a5be-fca90e38aaf5
-# %discordid%:           ID des Discord-Accounts
-#                         z.B. 12345678901234567890
-# %discordname%:         Name des Discord-Accounts
-#                         z.B. Notch
-#
-# MinecraftDiscordAccountLinkedRoleNameToAddUserTo: die Rolle, die dem Discord-Nutzer zugewiesen wird, wenn er Minecraft und Discord verbunden hat
-# MinecraftDiscordAccountLinkedAllowRelinkBySendingANewCode: Ermöglicht das Senden eines neuen Codes an den Bot, um die Verknüpfung zu lösen und mit dem neuen Code erneut zu verknüpfen
-#
-MinecraftDiscordAccountLinkedConsoleCommands: ["", "", ""]
-MinecraftDiscordAccountUnlinkedConsoleCommands: ["", "", ""]
-MinecraftDiscordAccountLinkedRoleNameToAddUserTo: "Linked"
-MinecraftDiscordAccountLinkedAllowRelinkBySendingANewCode: false
 
 # Server-Watchdog
 #
