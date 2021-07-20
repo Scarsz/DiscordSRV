@@ -211,6 +211,11 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
                 continue;
             }
 
+            if (role.isPublicRole()) {
+                synchronizationSummary.add("Skipping role " + roleId + " because it's a Guild's public role");
+                continue;
+            }
+
             Guild guild = role.getGuild();
 
             // get the member, from cache if it's there otherwise from Discord
@@ -375,7 +380,7 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
 
         if (addLinkedRole) {
             try {
-                Role role = DiscordUtil.getJda().getRolesByName(DiscordSRV.config().getString("MinecraftDiscordAccountLinkedRoleNameToAddUserTo"), true).stream().findFirst().orElse(null);
+                Role role = DiscordUtil.resolveRole(DiscordSRV.config().getString("MinecraftDiscordAccountLinkedRoleNameToAddUserTo"));
                 if (role != null) {
                     roleChanges.computeIfAbsent(role.getGuild(), guild -> new HashMap<>())
                             .computeIfAbsent("add", s -> new HashSet<>())
@@ -481,6 +486,7 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
     public void resyncEveryone(SyncCause cause) {
         resyncEveryone(SyncDirection.AUTHORITATIVE, cause);
     }
+    @SuppressWarnings("ConstantConditions") // I'm tired of hearing this
     public void resyncEveryone(SyncDirection direction, SyncCause cause) {
         Set<OfflinePlayer> players = new HashSet<>();
 
@@ -489,7 +495,8 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
                 .map(OfflinePlayer::getUniqueId)
                 .collect(Collectors.toSet())
         ).keySet().stream()
-                .map(Bukkit.getServer()::getOfflinePlayer)
+                .map(Bukkit::getOfflinePlayer)
+                .filter(Objects::nonNull)
                 .forEach(players::add);
 
         // synchronize everyone with a linked account in the connected discord servers
@@ -505,15 +512,15 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
                 .map(member -> linkedDiscords.get(member.getId()))
                 .filter(Objects::nonNull)
                 .map(Bukkit::getOfflinePlayer)
+                .filter(Objects::nonNull)
                 .forEach(players::add);
 
         players.forEach(player -> resync(player, direction, cause));
     }
 
     public void removeSynchronizables(OfflinePlayer player) {
-        if (!DiscordSRV.config().getBoolean("GroupRoleSynchronizationMinecraftIsAuthoritative")
-                && DiscordSRV.config().getBoolean("GroupRoleSynchronizationOneWay")) {
-            // one way Discord -> Minecraft
+        if (!DiscordSRV.config().getBoolean("GroupRoleSynchronizationMinecraftIsAuthoritative")) {
+            // Discord is authoritative, remove minecraft groups
             Permission permission = getPermissions();
 
             List<String> fail = new ArrayList<>();
@@ -527,7 +534,7 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
                     }
                 }
             }
-            DiscordSRV.debug(player.getName() + " removed from their groups (group sync is one way Discord -> Minecraft). succeeded: " + success + ", failed: " + fail);
+            DiscordSRV.debug(player.getName() + " removed from their groups (Discord is authoritative). succeeded: " + success + ", failed: " + fail);
         } else {
             removeSynchronizedRoles(player);
         }
@@ -546,7 +553,7 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
             try {
                 // remove user from linked role
                 String linkRole = DiscordSRV.config().getString("MinecraftDiscordAccountLinkedRoleNameToAddUserTo");
-                Role role = StringUtils.isNotBlank(linkRole) ? DiscordUtil.getJda().getRolesByName(linkRole, true).stream().findFirst().orElse(null) : null;
+                Role role = StringUtils.isNotBlank(linkRole) ? DiscordUtil.resolveRole(linkRole) : null;
                 if (role != null) {
                     roles.computeIfAbsent(role.getGuild(), guild -> new HashSet<>()).add(role);
                 } else {

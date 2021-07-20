@@ -25,6 +25,7 @@ package github.scarsz.discordsrv.modules.alerts;
 import alexh.weak.Dynamic;
 import alexh.weak.Weak;
 import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.objects.ExpiringDualHashBidiMap;
 import github.scarsz.discordsrv.objects.Lag;
 import github.scarsz.discordsrv.objects.MessageFormat;
@@ -204,6 +205,11 @@ public class AlertListener implements Listener, EventListener {
 
     @Override
     public void onEvent(@NotNull GenericEvent event) {
+        runAlertsForEvent(event);
+    }
+
+    @Subscribe
+    public void onDSRVEvent(github.scarsz.discordsrv.api.events.Event event) {
         runAlertsForEvent(event);
     }
 
@@ -387,7 +393,7 @@ public class AlertListener implements Listener, EventListener {
             }
             if (textChannels.isEmpty()) {
                 textChannels.addAll(channelResolver.apply(s -> NumberUtils.isDigits(s) ?
-                        Collections.singleton(DiscordUtil.getJda().getTextChannelById(s)) : null));
+                        Collections.singleton(DiscordUtil.getJda().getTextChannelById(s)) : Collections.emptyList()));
             }
 
             if (textChannels.size() == 0) {
